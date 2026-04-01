@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your Profile - FashionHub">
+    <title>Profile - FashionHub</title>
+    
+    <!-- 🎨 Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 🎨 ROOT VARIABLES */
+        :root {
+            --primary-rose: #e11d48;
+            --primary-dark: #be185d;
+            --text-dark: #343a40;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow-md: 0 4px 15px rgba(225, 29, 72, 0.1);
+            --transition: all 0.3s ease;
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+        
+        /* 🌍 GLOBAL STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+        
+        /* 📱 NAVBAR */
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--white) 0%, #fdf2f8 100%);
+            box-shadow: var(--shadow-md);
+            padding: 0.8rem 0;
+            border-bottom: 2px solid var(--primary-rose);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-rose) !important;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            color: var(--primary-dark) !important;
+        }
+        
+        .nav-link {
+            color: var(--text-dark) !important;
+            margin: 0 0.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary-rose);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-rose) !important;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-icon {
+            color: var(--primary-rose);
+            font-size: 1.3rem;
+            margin-left: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .nav-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .cart-badge {
+            background: var(--primary-rose);
+            color: white;
+            border-radius: 50%;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: -0.5rem;
+        }
+        
+        /* 🖼️ PROFILE SECTION */
+        .profile-section {
+            padding: 60px 20px;
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-rose);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-header p {
+            color: rgba(52, 58, 64, 0.7);
+            font-size: 1.1rem;
+        }
+        
+        /* 👤 PROFILE CARD */
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .profile-avatar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .avatar-circle {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-rose), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            color: rgba(52, 58, 64, 0.7);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-rose);
+        }
+        
+        /* 📝 EDIT FORM */
+        .edit-form {
+            display: none;
+        }
+        
+        .edit-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-rose);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+            outline: none;
+        }
+        
+        .form-control.is-invalid {
+            border-color: var(--error-red);
+        }
+        
+        .form-control.is-valid {
+            border-color: var(--success-green);
+        }
+        
+        .error-msg {
+            color: var(--error-red);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        /* 🔘 BUTTONS */
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-edit {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-rose) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-save {
+            flex: 1;
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-save:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .btn-cancel {
+            flex: 1;
+            background: #ddd;
+            color: var(--text-dark);
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-cancel:hover {
+            background: #ccc;
+        }
+        
+        .btn-logout {
+            width: 100%;
+            background: var(--error-red);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .btn-logout:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        /* 📋 MINI STATS */
+        .mini-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+            border: 2px solid var(--primary-rose);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-rose);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(52, 58, 64, 0.7);
+            margin-top: 0.3rem;
+        }
+        
+        /* 🔗 FOOTER */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 40px 20px 20px;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-rose);
+            padding-left: 5px;
+        }
+        
+        .footer-title {
+            color: var(--primary-rose);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-rose);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .social-icon:hover {
+            background: white;
+            color: var(--primary-rose);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            margin-top: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            .profile-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .profile-card {
+                padding: 25px;
+            }
+            
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .mini-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 📱 NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">✨ FashionHub</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item" id="registerLink" style="display: none;">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item" id="loginLink" style="display: none;">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="fas fa-shopping-cart nav-icon"></i>
+                            <span class="cart-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt nav-icon"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🖼️ PROFILE SECTION -->
+    <section class="profile-section">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+            <p>Manage your account information</p>
+        </div>
+
+        <div class="profile-card">
+            <!-- 👤 AVATAR -->
+            <div class="profile-avatar">
+                <div class="avatar-circle">👩</div>
+            </div>
+
+            <!-- 📊 MINI STATS -->
+            <div class="mini-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-number" id="orderCount">0</div>
+                    <div class="stat-label">Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-number" id="productCount">0</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number" id="memberSince">Since 2026</div>
+                    <div class="stat-label">Member</div>
+                </div>
+            </div>
+
+            <!-- 📋 PROFILE INFO (View Mode) -->
+            <div id="viewMode">
+                <div class="profile-info">
+                    <div class="info-item">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value" id="displayName">Guest User</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="displayEmail">-</div>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h5 style="margin-bottom: 1rem; color: var(--primary-rose);">📞 Contact Information</h5>
+                    <p><strong>Phone:</strong> <span id="displayPhone">Not provided</span></p>
+                    <p><strong>Member Since:</strong> <span id="displayJoinDate">January 2026</span></p>
+                    <p><strong>Account Status:</strong> <span id="displayStatus" style="color: var(--success-green); font-weight: 700;">✅ Active</span></p>
+                </div>
+            </div>
+
+            <!-- ✏️ EDIT FORM (Edit Mode) -->
+            <div id="editMode" class="edit-form">
+                <form id="profileForm" novalidate>
+                    <div class="form-group">
+                        <label for="editName">Full Name <span style="color: var(--error-red);">*</span></label>
+                        <input 
+                            type="text" 
+                            id="editName" 
+                            class="form-control" 
+                            placeholder="Enter your full name"
+                            required
+                        >
+                        <div class="error-msg" id="nameError">Full name is required</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEmail">Email Address <span style="color: var(--error-red);">*</span></label>
+                        <input 
+                            type="email" 
+                            id="editEmail" 
+                            class="form-control" 
+                            placeholder="Enter your email"
+                            required
+                        >
+                        <div class="error-msg" id="emailError">Please enter a valid email</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editPhone">Phone Number</label>
+                        <input 
+                            type="tel" 
+                            id="editPhone" 
+                            class="form-control" 
+                            placeholder="(123) 456-7890"
+                        >
+                        <div class="error-msg" id="phoneError">Phone number must be valid</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAddress">Address</label>
+                        <input 
+                            type="text" 
+                            id="editAddress" 
+                            class="form-control" 
+                            placeholder="Enter your address"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCity">City</label>
+                        <input 
+                            type="text" 
+                            id="editCity" 
+                            class="form-control" 
+                            placeholder="Enter your city"
+                        >
+                    </div>
+                </form>
+            </div>
+
+            <!-- 🔘 BUTTONS -->
+            <div class="btn-container">
+                <button id="editBtn" class="btn-edit" onclick="toggleEditMode()">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+
+            <div id="editButtonContainer" style="display: none;">
+                <div class="btn-container">
+                    <button class="btn-save" onclick="saveProfile()">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="toggleEditMode()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- 🚪 LOGOUT BUTTON -->
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+
+        <!-- 📦 RECENT ORDERS SECTION -->
+        <div class="profile-card" id="ordersSection" style="display: none; margin-top: 2rem;">
+            <h3 style="color: var(--primary-rose); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-history"></i> Recent Orders
+            </h3>
+            <div id="ordersContainer" style="max-height: 400px; overflow-y: auto;">
+                <!-- Orders will be inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔗 FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <h6 class="footer-title">About FashionHub</h6>
+                    <p>Your one-stop destination for premium women's fashion.</p>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <h6 class="footer-title">Quick Links</h6>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="cart.html" class="footer-link">My Cart</a>
+                    <a href="profile.html" class="footer-link">My Profile</a>
+                    <a href="contact.html" class="footer-link">Contact Us</a>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <h6 class="footer-title">Support</h6>
+                    <a href="#" class="footer-link">Help Center</a>
+                    <a href="#" class="footer-link">Shipping Info</a>
+                    <a href="#" class="footer-link">Returns Policy</a>
+                    <a href="#" class="footer-link">FAQ</a>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <h6 class="footer-title">Follow Us</h6>
+                    <div class="social-icons">
+                        <div class="social-icon"><i class="fab fa-facebook"></i></div>
+                        <div class="social-icon"><i class="fab fa-instagram"></i></div>
+                        <div class="social-icon"><i class="fab fa-twitter"></i></div>
+                        <div class="social-icon"><i class="fab fa-pinterest"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FashionHub. All rights reserved. | Designed with 💗 for Women's Fashion</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 🎨 Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 🖼️ LOAD PROFILE DATA
+        function loadProfile() {
+            // 🔐 CHECK IF USER IS LOGGED IN
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                alert('👤 Please login first');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 🔍 GET ACCOUNT DETAILS FROM REGISTERED ACCOUNTS
+            const accounts = JSON.parse(localStorage.getItem('registeredAccounts')) || [];
+            const account = accounts.find(acc => acc.email === currentUser.email);
+
+            if (!account) {
+                alert('❌ Account not found');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 📊 Update view mode
+            document.getElementById('displayName').textContent = account.fullName;
+            document.getElementById('displayEmail').textContent = account.email;
+            document.getElementById('displayPhone').textContent = account.phone || 'Not provided';
+
+            // 📝 Update edit form
+            document.getElementById('editName').value = account.fullName;
+            document.getElementById('editEmail').value = account.email;
+            document.getElementById('editPhone').value = account.phone || '';
+            
+            // 📊 UPDATE PURCHASE STATISTICS
+            const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+            const userOrders = purchaseHistory.filter(order => order.userEmail === currentUser.email);
+            
+            // Calculate total products purchased
+            const totalProducts = userOrders.reduce((sum, order) => sum + order.itemCount, 0);
+            const totalOrders = userOrders.length;
+            
+            // Update order count display
+            document.getElementById('orderCount').textContent = totalOrders;
+            
+            // Add total products display if it exists
+            const productsElement = document.getElementById('productCount');
+            if (productsElement) {
+                productsElement.textContent = totalProducts;
+            }
+            
+            // 📦 DISPLAY RECENT ORDERS
+            const ordersSection = document.getElementById('ordersSection');
+            const ordersContainer = document.getElementById('ordersContainer');
+            
+            if (userOrders.length > 0) {
+                ordersSection.style.display = 'block';
+                ordersContainer.innerHTML = '';
+                
+                // Show last 5 orders in reverse chronological order
+                userOrders.slice(-5).reverse().forEach((order, index) => {
+                    const orderItems = order.cartItems.map(item => 
+                        `<div style="font-size: 0.9rem; color: #666;">• ${item.name} x${item.quantity}</div>`
+                    ).join('');
+                    
+                    const orderHTML = `
+                        <div style="background: #f8f9fa; border-left: 4px solid var(--primary-rose); padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong style="color: var(--primary-rose);">Order #${userOrders.length - index}</strong>
+                                <span style="color: #28a745; font-weight: 600;">✓ ${order.status}</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">📅 ${order.orderDate}</div>
+                            ${orderItems}
+                            <div style="border-top: 1px solid #ddd; padding-top: 0.5rem; margin-top: 0.5rem; text-align: right; color: var(--primary-rose); font-weight: 700;">
+                                Total: $${order.total.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                    ordersContainer.innerHTML += orderHTML;
+                });
+            } else {
+                ordersSection.style.display = 'none';
+            }
+        }
+
+        // ✏️ TOGGLE EDIT MODE
+        function toggleEditMode() {
+            const viewMode = document.getElementById('viewMode');
+            const editMode = document.getElementById('editMode');
+            const editBtn = document.getElementById('editBtn');
+            const editBtnContainer = document.getElementById('editButtonContainer');
+
+            viewMode.style.display = viewMode.style.display === 'none' ? 'block' : 'none';
+            editMode.classList.toggle('active');
+            editBtn.style.display = editBtn.style.display === 'none' ? 'block' : 'none';
+            editBtnContainer.style.display = editBtnContainer.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // 💾 SAVE PROFILE
+        function saveProfile() {
+            const name = document.getElementById('editName').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+
+            // 🔍 Validate
+            if (!name || !email) {
+                alert('❌ Please fill in all required fields');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('❌ Please enter a valid email');
+                return;
+            }
+
+            // 🔐 GET CURRENT USER
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            // 🔍 UPDATE IN REGISTERED ACCOUNTS
+            let accounts = JSON.parse(localStorage.getItem('registeredAccounts')) || [];
+            const accountIndex = accounts.findIndex(acc => acc.email === currentUser.email);
+            
+            if (accountIndex !== -1) {
+                accounts[accountIndex].fullName = name;
+                accounts[accountIndex].email = email;
+                accounts[accountIndex].phone = phone;
+
+                // 💾 Save updated accounts
+                localStorage.setItem('registeredAccounts', JSON.stringify(accounts));
+
+                // 🔄 UPDATE CURRENT USER
+                currentUser.fullName = name;
+                currentUser.email = email;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                alert('✅ Profile updated successfully!');
+
+                // 🔄 Reload and toggle back to view mode
+                loadProfile();
+                toggleEditMode();
+            }
+        }
+
+        // 🚪 LOGOUT
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // 🧹 Clear current user session
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('rememberLogin');
+                localStorage.removeItem('fashionCart');
+                
+                alert('✅ You have been logged out!');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 🛒 UPDATE CART COUNTER
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('fashionCart')) || [];
+            let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // ⏰ INITIALIZE ON PAGE LOAD
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>
